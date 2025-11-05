@@ -9,3 +9,11 @@ npm install # reinstall every packages according to pacakge.json
 npm run dev # for local development
 
 npm run build # for server deployment; upload the ./dist folder to a server
+
+## Changes
+- Fixed content offset.
+- Imported Tailwind CSS for better layout.
+- Added "Add Location to Query" button to quickly search for coordinates.
+- Added another page button on top of retrieved studies for convenience.
+- Link study titles to their PubMed webpages.
+- Added link to the GitHub Page on top right

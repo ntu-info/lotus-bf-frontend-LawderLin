@@ -7,7 +7,7 @@ import { NiiViewer } from './components/NiiViewer'
 import { useUrlQueryState } from './hooks/useUrlQueryState'
 import './App.css'
 
-export default function App () {
+export default function App() {
   const [query, setQuery] = useUrlQueryState('q')
 
   const handlePickTerm = useCallback((t) => {
@@ -67,7 +67,7 @@ export default function App () {
           --border: #e5e7eb;
         }
         .app { padding-right: 0 !important; }
-        .app__grid { width: 100vw; max-width: 100vw; }
+        .app__grid { width: 100width; max-width: 100vw; }
         .card input[type="text"],
         .card input[type="search"],
         .card input[type="number"],
@@ -147,8 +147,13 @@ export default function App () {
       `}</style>
 
       <header className="app__header">
-        <h1 className="app__title">LoTUS-BF</h1>
-        <div className="app__subtitle">Location-or-Term Unified Search for Brain Functions</div>
+        <div className="flex items-center justify-between w-full">
+          <span>
+            <h1 className="app__title">LoTUS-BF</h1>
+            <div className="app__subtitle">Location-or-Term Unified Search for Brain Functions</div>
+          </span>
+          <a href="https://github.com/ntu-info/114-1-psychoinformatics-lotus-bf-frontend-09.git" target="_blank" rel="noopener noreferrer" className="rounded-lg border text-lg p-2">GitHub Repo</a>
+        </div>
       </header>
 
       <main className="app__grid" ref={gridRef}>
@@ -169,7 +174,7 @@ export default function App () {
         <div className="resizer" aria-label="Resize middle/right" onMouseDown={(e) => startDrag(1, e)} />
 
         <section className="card" style={{ flexBasis: `${sizes[2]}%` }}>
-          <NiiViewer query={query} />
+          <NiiViewer query={query} onAddLocation={handlePickTerm} />
         </section>
       </main>
     </div>

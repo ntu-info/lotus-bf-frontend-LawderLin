@@ -1,7 +1,7 @@
 import { API_BASE } from '../api'
 import { useEffect, useMemo, useState } from 'react'
 
-export function Terms ({ onPickTerm }) {
+export function Terms({ onPickTerm }) {
   const [terms, setTerms] = useState([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
@@ -78,14 +78,14 @@ export function Terms ({ onPickTerm }) {
               {filtered.slice(0, 500).map((t, idx) => (
                 <li key={`${t}-${idx}`} className='terms__li'>
                   <a
-  href="#"
-  className='terms__name'
-  title={t}
-  aria-label={`Add term ${t}`}
-  onClick={(e) => { e.preventDefault(); onPickTerm?.(t); }}
->
-  {t}
-</a>
+                    href="#"
+                    className='terms__name'
+                    title={t}
+                    aria-label={`Add term ${t}`}
+                    onClick={(e) => { e.preventDefault(); onPickTerm?.(t); }}
+                  >
+                    {t}
+                  </a>
                 </li>
               ))}
             </ul>

@@ -1,9 +1,10 @@
 import { API_BASE } from '../api'
 import { useEffect, useMemo, useState } from 'react'
+import { PageButtons } from './PageButtons'
 
-function classNames (...xs) { return xs.filter(Boolean).join(' ') }
+function classNames(...xs) { return xs.filter(Boolean).join(' ') }
 
-export function Studies ({ query }) {
+export function Studies({ query }) {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState('')
@@ -18,25 +19,25 @@ export function Studies ({ query }) {
     if (!query) return
     let alive = true
     const ac = new AbortController()
-    ;(async () => {
-      setLoading(true)
-      setErr('')
-      try {
-        const url = `${API_BASE}/query/${encodeURIComponent(query)}/studies`
-        const res = await fetch(url, { signal: ac.signal })
-        const data = await res.json().catch(() => ({}))
-        if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`)
-        if (!alive) return
-        const list = Array.isArray(data?.results) ? data.results : []
-        setRows(list)
-      } catch (e) {
-        if (!alive) return
-        setErr(`Unable to fetch studies: ${e?.message || e}`)
-        setRows([])
-      } finally {
-        if (alive) setLoading(false)
-      }
-    })()
+      ; (async () => {
+        setLoading(true)
+        setErr('')
+        try {
+          const url = `${API_BASE}/query/${encodeURIComponent(query)}/studies`
+          const res = await fetch(url, { signal: ac.signal })
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`)
+          if (!alive) return
+          const list = Array.isArray(data?.results) ? data.results : []
+          setRows(list)
+        } catch (e) {
+          if (!alive) return
+          setErr(`Unable to fetch studies: ${e?.message || e}`)
+          setRows([])
+        } finally {
+          if (alive) setLoading(false)
+        }
+      })()
     return () => { alive = false; ac.abort() }
   }, [query])
 
@@ -66,7 +67,7 @@ export function Studies ({ query }) {
       <div className='flex items-center justify-between p-3'>
         <div className='card__title'>Studies</div>
         <div className='text-sm text-gray-500'>
-           {/* {query ? `Query: ${query}` : 'Query: (empty)'} */}
+          {/* {query ? `Query: ${query}` : 'Query: (empty)'} */}
         </div>
       </div>
 
@@ -86,6 +87,14 @@ export function Studies ({ query }) {
       )}
 
       {query && !loading && !err && (
+        <PageButtons
+          sorted={sorted}
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
+      )}
+
         <div className='overflow-auto'>
           <table className='min-w-full text-sm'>
             <thead className='sticky top-0 bg-gray-50 text-left'>
@@ -113,7 +122,7 @@ export function Studies ({ query }) {
                   <tr key={i} className={classNames(i % 2 ? 'bg-white' : 'bg-gray-50')}>
                     <td className='whitespace-nowrap px-3 py-2 align-top'>{r.year ?? ''}</td>
                     <td className='px-3 py-2 align-top'>{r.journal || ''}</td>
-                    <td className='max-w-[540px] px-3 py-2 align-top'><div className='truncate' title={r.title}>{r.title || ''}</div></td>
+                    <td className='max-w-[540px] px-3 py-2 align-top '><a href={`https://pubmed.ncbi.nlm.nih.gov/${r.id}`} target="_blank" rel="noopener noreferrer">{r.title || ''}</a></td>
                     <td className='px-3 py-2 align-top'>{r.authors || ''}</td>
                   </tr>
                 ))
@@ -121,18 +130,14 @@ export function Studies ({ query }) {
             </tbody>
           </table>
         </div>
-      )}
 
       {query && !loading && !err && (
-        <div className='flex items-center justify-between border-t p-3 text-sm'>
-          <div>Total <b>{sorted.length}</b> records, page <b>{page}</b>/<b>{totalPages}</b></div>
-          <div className='flex items-center gap-2'>
-            <button disabled={page <= 1} onClick={() => setPage(1)} className='rounded-lg border px-2 py-1 disabled:opacity-40'>⏮</button>
-            <button disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))} className='rounded-lg border px-2 py-1 disabled:opacity-40'>Previous</button>
-            <button disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))} className='rounded-lg border px-2 py-1 disabled:opacity-40'>Next</button>
-            <button disabled={page >= totalPages} onClick={() => setPage(totalPages)} className='rounded-lg border px-2 py-1 disabled:opacity-40'>⏭</button>
-          </div>
-        </div>
+        <PageButtons
+          sorted={sorted}
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
       )}
     </div>
   )

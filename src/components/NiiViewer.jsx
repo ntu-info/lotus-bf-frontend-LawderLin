@@ -18,7 +18,7 @@ function isStandardMNI2mm(dims, voxelMM) {
 // x = -2*i + 90;  y = 2*j - 126;  z = 2*k - 72
 const MNI2MM = { x0: 90, y0: -126, z0: -72, vx: 2, vy: 2, vz: 2 };
 
-export function NiiViewer({ query }) {
+export function NiiViewer({ query, onAddLocation }) {
   const [loadingBG, setLoadingBG] = useState(false)
   const [loadingMap, setLoadingMap] = useState(false)
   const [errBG, setErrBG] = useState('')
@@ -402,14 +402,14 @@ const coord2idx = (c_mm, n, axis) => {
     <div className='flex flex-col gap-3'>
       <div className='flex items-center justify-between'>
         <div className='card__title'>NIfTI Viewer</div>
-        <div className='flex items-center gap-2 text-sm text-gray-500'>
+        <div className='flexgap-2 text-sm text-gray-500'>
           {query && <a href={mapUrl} className='rounded-lg border px-2 py-1 text-xs hover:bg-gray-50'>Download map</a>}
         </div>
       </div>
 
       {/* --- Threshold mode & value --- */}
       <div className='rounded-xl border p-3 text-sm'>
-        <label className='flex items-center gap-2'>
+        <label className='flexgap-2'>
           <span>Threshold mode</span>
           <select value={thrMode} onChange={e=>setThrMode(e.target.value)} className='rounded-lg border px-2 py-1'>
             <option value='value'>Value</option>
@@ -419,7 +419,7 @@ const coord2idx = (c_mm, n, axis) => {
         <br />
         {thrMode === 'value' ? (
           <>
-            <label className='flex items-center gap-2'>
+            <label className='flexgap-2'>
               <span>Threshold</span>
               <input type='number' step='0.01' value={thrValue} onChange={e=>setThrValue(Number(e.target.value))} className='w-28 rounded-lg border px-2 py-1' />
             </label>
@@ -436,8 +436,8 @@ const coord2idx = (c_mm, n, axis) => {
         )}
 
         {/* Neurosynth-style coordinate inputs (signed, centered at 0) */}
-        <div className='mt-1 flex items-center gap-4'>
-          <label className='flex items-center'>
+        <div className='mt-1 flex gap-4'>
+          <label className='flex'>
             <span className={nsLabelCls}>X (mm):</span>
             <input
               type='text' inputMode='decimal' pattern='-?[0-9]*([.][0-9]+)?'
@@ -449,7 +449,7 @@ const coord2idx = (c_mm, n, axis) => {
               aria-label='X coordinate (centered)'
             />
           </label>
-          <label className='flex items-center'>
+          <label className='flex'>
             <span className={nsLabelCls}>Y (mm):</span>
             <input
               type='text' inputMode='decimal' pattern='-?[0-9]*([.][0-9]+)?'
@@ -461,7 +461,7 @@ const coord2idx = (c_mm, n, axis) => {
               aria-label='Y coordinate (centered)'
             />
           </label>
-          <label className='flex items-center'>
+          <label className='flex'>
             <span className={nsLabelCls}>Z (mm):</span>
             <input
               type='text' inputMode='decimal' pattern='-?[0-9]*([.][0-9]+)?'
@@ -475,6 +475,8 @@ const coord2idx = (c_mm, n, axis) => {
           </label>
         </div>
       </div>
+      {/* Button that insert coordinates as query */}
+      <button onClick={() => onAddLocation?.(`[${cx}, ${cy}, ${cz}]`)}>Add Coordinates to Query</button>
 
       {/* --- Brain views --- */}
       {(loadingBG || loadingMap) && (
@@ -497,7 +499,7 @@ const coord2idx = (c_mm, n, axis) => {
             <div key={key} className='flex flex-col gap-2'>
               <div className='text-xs text-gray-600'>{name} ({axisLabel})</div>
               <div className='flex items-center gap-2'>
-                <canvas ref={canvasRef} className='h-64 w-full rounded-xl border' onClick={(e)=>onCanvasClick(e, key)} style={{ cursor: 'crosshair' }} />
+                <canvas ref={canvasRef} className='w-full rounded-xl border' onClick={(e)=>onCanvasClick(e, key)} style={{ cursor: 'crosshair' }} />
               </div>
             </div>
           ))}
