@@ -152,7 +152,7 @@ export default function App() {
             <h1 className="app__title">LoTUS-BF</h1>
             <div className="app__subtitle">Location-or-Term Unified Search for Brain Functions</div>
           </span>
-          <a href="https://github.com/ntu-info/114-1-psychoinformatics-lotus-bf-frontend-09.git" target="_blank" rel="noopener noreferrer" className="rounded-lg border text-lg p-2">GitHub Repo</a>
+          <a href="https://github.com/ntu-info/lotus-bf-frontend-LawderLin.git" target="_blank" rel="noopener noreferrer" className="rounded-lg border text-lg p-2">GitHub Repo</a>
         </div>
       </header>
 
